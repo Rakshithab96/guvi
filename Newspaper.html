@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: rgb(153, 143, 143);
+        position: fixed;
+        top: 0;
+        width: 100%;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: rgb(250, 241, 241);
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    .active {
+        background-color: #4CAF50;
+    }
+
+    #conBody {
+        padding-top: 50px;
+        border: 1px solid black;
+        background-color: rgb(247, 242, 242);
+    }
+
+    #imgId {
+        width: 150px;
+        height: 150px;
+    }
+</style>
+
+<body>
+    <script>
+
+        getData();
+        function getData() {
+
+            var container = document.createElement("div");
+            container.setAttribute("class", "container");
+
+            var header = document.createElement("div");
+            header.setAttribute("class", "header");
+
+            var ul = document.createElement("ul");
+
+            var li2 = document.createElement("li");
+            var a2 = document.createElement("a");
+            a2.innerHTML = "World";
+            a2.onclick = getWorld;
+            async function getWorld() {
+               // try {
+                    let news = await fetch("https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=D5LhIfMUd9KqEvr2hWjlyfQb8IqdIQvN");
+                    let jsonD = await news.json();
+                    console.log(jsonD);
+                    getDetails(jsonD);
+                // }
+                // catch {
+                    console.error("Error");
+                //}
+            }
+            function getDetails(respose) {
+                console.log(respose);
+                alert(respose);
+                // var divEle = document.createElement("div");
+                // divEle.innerHTML = "This is world content";
+                // container.append(divEle);
+            }
+            var li3 = document.createElement("li");
+            var a3 = document.createElement("a");
+            a3.innerHTML = "Politics";
+
+            var li4 = document.createElement("li");
+            var a4 = document.createElement("a");
+            a4.innerHTML = "Magazine";
+
+            var li5 = document.createElement("li");
+            var a5 = document.createElement("a");
+            a5.innerHTML = "Technology";
+
+            var li6 = document.createElement("li");
+            var a6 = document.createElement("a");
+            a6.innerHTML = "Science";
+
+            var li7 = document.createElement("li");
+            var a7 = document.createElement("a");
+            a7.innerHTML = "Health";
+
+            var li1 = document.createElement("li");
+            var a1 = document.createElement("a");
+            a1.innerHTML = "Home";
+            a1.onclick = getNews;
+            async function getNews() {
+                try {
+                    let newsData = await fetch("https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json?api-key=D5LhIfMUd9KqEvr2hWjlyfQb8IqdIQvN");
+                    let jsonData = await newsData.json();
+                    getDetails(jsonData.results.books);
+                }
+                catch {
+                    console.error("Error");
+                }
+            }
+            function getDetails(response) {
+                var div = document.createElement("div");
+                response.forEach(element => {
+                    let childArray = element.child;
+                    let conBody = document.createElement('div');
+                    conBody.id = "conBody";
+
+                    let row = document.createElement("div");
+                    row.setAttribute("class", "row")
+                    let col1 = document.createElement("div");
+                    col1.setAttribute("class", "col-sm-9");
+                    col1.innerHTML = "Author: " + element.author + "<br>Title: " + element.title + "<br>Description:"
+                        + element.description + "<br>Price: " + element.price + "<br>Ranking: " + element.rank + "<br>Buy Link:";
+
+                    let buyLink = document.createElement("a");
+
+                    var url = element.amazon_product_url;
+                    var t = document.createTextNode(url);
+                    buyLink.setAttribute("href", url);
+                    buyLink.appendChild(t);
+
+
+                    let col2 = document.createElement("div");
+                    col2.setAttribute("class", "col-sm-3");
+                    col2.id = "col2_id";
+
+                    let image = document.createElement('img');
+                    image.id = 'imgId';
+                    image.src = element.book_image;
+
+
+                    col2.append(image);
+                    col1.append(buyLink);
+                    row.append(col1, col2);
+                    conBody.append(row);
+
+                    container.append(conBody);
+
+                });
+
+            }
+
+
+            li7.append(a7);
+            li6.append(a6);
+            li5.append(a5);
+            li4.append(a4);
+            li3.append(a3);
+            li2.append(a2);
+            li1.append(a1);
+
+            ul.append(li1, li2, li3, li4, li5, li6, li7);
+
+            header.append(ul);
+
+            container.append(header);
+            document.body.append(container);
+        }
+    </script>
+</body>
+
+</html>
